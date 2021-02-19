@@ -49,6 +49,7 @@ runs:
     - name: prettier
       shell: bash
       run: >-
+        shopt -s globstar nullglob;
         PATH=$(cd $GITHUB_ACTION_PATH; npm bin):$PATH
         prettier
         ${{ inputs.prettier_options }}
