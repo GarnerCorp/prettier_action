@@ -1,7 +1,4 @@
-#!/bin/sh
-# e is for exiting the script automatically if a command fails, u is for exiting if a variable is not set
-# x would be for showing the commands before they are executed
-set -eu
+#!/bin/sh -e
 
 # FUNCTIONS
 # Function for setting up git env in the docker container (copied from https://github.com/stefanzweifel/git-auto-commit-action/blob/master/entrypoint.sh)
@@ -88,4 +85,7 @@ if _git_changed; then
 else
   echo "Nothing to commit. Exiting."
 fi
+npm install --silent --global prettier
+
+echo
 prettier $INPUT_PRETTIER_OPTIONS
