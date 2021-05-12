@@ -3,7 +3,7 @@
 # x would be for showing the commands before they are executed
 set -eu
 shopt -s globstar nullglob
-
+set -x
 # FUNCTIONS
 # Function for setting up git env in the docker container (copied from https://github.com/stefanzweifel/git-auto-commit-action/blob/master/entrypoint.sh)
 _git_setup ( ) {
@@ -23,6 +23,7 @@ EOF
 
 # Checks if any files are changed
 _git_changed() {
+  echo $((git status -s))
     [[ -n "$(git status -s)" ]]
 }
 
@@ -32,6 +33,7 @@ _git_changed() {
 cd "$GITHUB_ACTION_PATH"
 
 echo "Installing prettier..."
+echo $INPUT_PRETTIER_VERSION
 case $INPUT_PRETTIER_VERSION in
     false)
         npm install --silent prettier
@@ -40,6 +42,8 @@ case $INPUT_PRETTIER_VERSION in
         npm install --silent prettier@$INPUT_PRETTIER_VERSION
         ;;
 esac
+
+echo $INPUT_PRETTIER_OPTIONS
 
 # Install plugins
 if [ -n "$INPUT_PRETTIER_PLUGINS" ]; then
@@ -58,7 +62,8 @@ fi
 PRETTIER_RESULT=0
 echo "Prettifying files..."
 echo "Files:"
-prettier $INPUT_PRETTIER_OPTIONS || { PRETTIER_RESULT=$?; echo "Problem running prettier with $INPUT_PRETTIER_OPTIONS"; }
+echo "INPUT_PRETIER_OPTIONS: $INPUT_PRETTIER_OPTIONS"
+prettier ${INPUT_PRETTIER_OPTIONS} || { PRETTIER_RESULT=$?; echo "Problem running prettier with $INPUT_PRETTIER_OPTIONS"; }
 
 # Ignore node modules and other action created files
 rm -r node_modules/ || echo "No node_modules/ folder."
