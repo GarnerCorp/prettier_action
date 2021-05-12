@@ -41,8 +41,17 @@ inputs:
     default: ''
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'composite'
+  steps:
+    - name: install prettier
+      shell: bash
+      run: (cd $GITHUB_ACTION_PATH; npm install --silent prettier)
+    - name: prettier
+      shell: bash
+      run: >-
+        PATH=$(cd $GITHUB_ACTION_PATH; npm bin):$PATH
+        prettier
+        ${{ inputs.prettier_options }}
 
 branding:
   icon: 'award'
