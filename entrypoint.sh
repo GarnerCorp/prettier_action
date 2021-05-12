@@ -88,3 +88,4 @@ if _git_changed; then
 else
   echo "Nothing to commit. Exiting."
 fi
+prettier $INPUT_PRETTIER_OPTIONS
